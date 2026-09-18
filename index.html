@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DudinhaGames - Aprender é Divertido!</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="app-container">
+        <!-- Header will be dynamically injected or managed by JS -->
+        <header id="main-header" class="hidden">
+            <div class="user-info">
+                <div class="avatar-display" id="header-avatar"></div>
+                <div class="user-name" id="header-name">Aluno</div>
+            </div>
+            <div class="stats">
+                <div class="stat-item"><i class="fas fa-star text-warning"></i> <span id="header-stars">0</span></div>
+                <div class="stat-item"><i class="fas fa-coins text-gold"></i> <span id="header-coins">0</span></div>
+            </div>
+            <div class="header-buttons" style="display:flex; gap:10px;">
+                <button id="btn-challenges" class="btn btn-sm btn-warning" onclick="app.showChallenges()"><i class="fas fa-trophy"></i> Desafios</button>
+                <button id="btn-report" class="btn btn-sm btn-info" onclick="app.showReport()"><i class="fas fa-chart-bar"></i> Relatório</button>
+                <button id="btn-home" class="btn btn-sm btn-primary" onclick="app.showHome()"><i class="fas fa-home"></i> Trilha</button>
+            </div>
+        </header>
+
+        <main id="content-area">
+            <!-- Loading -->
+            <div id="screen-loading" class="screen">
+                <div class="spinner"></div>
+                <h2>Carregando aventuras...</h2>
+            </div>
+
+            <!-- Avatar Selection / Login -->
+            <div id="screen-login" class="screen hidden">
+                <div class="login-card">
+                    <h1>Bem-vindo(a) ao DudinhaGames!</h1>
+                    <p>Qual é o seu nome, aventureiro(a)?</p>
+                    <input type="text" id="input-username" placeholder="Digite seu nome..." autocomplete="off">
+                    
+                    <p>Escolha seu Avatar:</p>
+                    <div class="avatar-selection">
+                        <div class="avatar-option selected" data-avatar="🦊">🦊</div>
+                        <div class="avatar-option" data-avatar="🐶">🐶</div>
+                        <div class="avatar-option" data-avatar="🐱">🐱</div>
+                        <div class="avatar-option" data-avatar="🐰">🐰</div>
+                        <div class="avatar-option" data-avatar="🐼">🐼</div>
+                        <div class="avatar-option" data-avatar="🐸">🐸</div>
+                    </div>
+
+                    <button class="btn btn-large btn-success" onclick="app.login()">Começar Aventura! <i class="fas fa-play"></i></button>
+                </div>
+            </div>
+
+            <!-- Map / Trail -->
+            <div id="screen-map" class="screen hidden">
+                <h2>Trilha do Conhecimento</h2>
+                <p>Escolha um desafio para ganhar estrelas e moedas!</p>
+                <div class="trail-container">
+                    <button class="trail-node subject-science" onclick="app.startSubject('science')" style="top: 10%; left: 20%;">
+                        <i class="fas fa-leaf"></i> Ciências
+                    </button>
+                    <button class="trail-node subject-geography" onclick="app.startSubject('geography')" style="top: 30%; left: 50%;">
+                        <i class="fas fa-globe-americas"></i> Geografia
+                    </button>
+                    <button class="trail-node subject-history" onclick="app.startSubject('history')" style="top: 50%; left: 20%;">
+                        <i class="fas fa-monument"></i> História
+                    </button>
+                    <button class="trail-node subject-math" onclick="app.startSubject('math')" style="top: 70%; left: 50%;">
+                        <i class="fas fa-calculator"></i> Matemática
+                    </button>
+                    <button class="trail-node subject-portuguese" onclick="app.startSubject('portuguese')" style="top: 90%; left: 20%;">
+                        <i class="fas fa-book"></i> Português
+                    </button>
+                    <svg class="trail-lines" width="100%" height="100%">
+                        <!-- Lines connecting nodes will be drawn via CSS or JS -->
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Minigame Container -->
+            <div id="screen-game" class="screen hidden">
+                <div class="game-header">
+                    <h2 id="game-title">Minigame</h2>
+                    <div class="progress-bar">
+                        <div id="game-progress" style="width: 0%;"></div>
+                    </div>
+                </div>
+                <div id="game-area"></div>
+            </div>
+
+        <!-- Report Screen -->
+            <div id="screen-report" class="screen hidden">
+                <h2>Boletim de Aventuras</h2>
+                <p>Veja como o <span id="report-name">Aluno</span> está indo!</p>
+                
+                <div class="report-grid" id="report-grid">
+                    <!-- Dynamic report cards -->
+                </div>
+                
+                <button class="btn btn-large btn-primary mt-4" onclick="app.showHome()">Voltar para a Trilha</button>
+            </div>
+
+            <!-- Challenges Screen -->
+            <div id="screen-challenges" class="screen hidden">
+                <h2><i class="fas fa-trophy text-warning"></i> Área de Desafios</h2>
+                <p>Escolha um desafio extra para treinar!</p>
+                <div class="report-grid" id="challenges-grid" style="margin-top:20px;">
+                    <!-- Math Multiplicacao Problemas -->
+                    <div class="report-card" style="border-color: #e74c3c; cursor:pointer;" onclick="app.startChallenge('math', 'mult_problems')">
+                        <h3 style="color: #e74c3c"><i class="fas fa-calculator"></i> Multiplicação</h3>
+                        <p>Problemas e historinhas matemáticas!</p>
+                        <button class="btn btn-sm btn-primary mt-4">Jogar</button>
+                    </div>
+                    <!-- Math Multiplicacao Continhas -->
+                    <div class="report-card" style="border-color: #e74c3c; cursor:pointer;" onclick="app.startChallenge('math', 'mult_calc')">
+                        <h3 style="color: #e74c3c"><i class="fas fa-times"></i> Multiplicação</h3>
+                        <p>Continhas rápidas de Vezes!</p>
+                        <button class="btn btn-sm btn-primary mt-4">Jogar</button>
+                    </div>
+                    <!-- Math Divisao Continhas -->
+                    <div class="report-card" style="border-color: #e74c3c; cursor:pointer;" onclick="app.startChallenge('math', 'div_calc')">
+                        <h3 style="color: #e74c3c"><i class="fas fa-divide"></i> Divisão</h3>
+                        <p>Continhas rápidas de Dividir!</p>
+                        <button class="btn btn-sm btn-primary mt-4">Jogar</button>
+                    </div>
+                </div>
+                <button class="btn btn-large btn-primary mt-4" onclick="app.showHome()">Voltar para a Trilha</button>
+            </div>
+
+        </main>
+    </div>
+    
+    <!-- Audio Elements -->
+    <audio id="snd-success" src="data:audio/mp3;base64,//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" preload="auto"></audio>
+    <audio id="snd-error" src="data:audio/mp3;base64,//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" preload="auto"></audio>
+
+    <script src="app.js"></script>
+</body>
+</html>
